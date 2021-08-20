@@ -8,5 +8,6 @@ require (
 	github.com/codegangsta/gin v0.0.0-20171026143024-cafe2ce98974 // indirect
 	github.com/golang/gddo v0.0.0-20210115222349-20d68f94ee1f
 	github.com/mattn/go-shellwords v1.0.12 // indirect
+	github.com/rs/cors v1.8.0
 	gopkg.in/urfave/cli.v1 v1.20.0 // indirect
 )

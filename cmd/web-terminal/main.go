@@ -13,6 +13,7 @@ import (
 	"strings"
 
 	"github.com/farazzshaikh/web-terminal/cmd/web-terminal/helpers"
+	"github.com/rs/cors"
 )
 
 type Command struct {
@@ -93,18 +94,23 @@ func WebTerminal(w http.ResponseWriter, r *http.Request) {
 		}
 
 	} else {
-		e := []byte(fmt.Sprintf("web-terminal: command not found: %s", cmd))
-		w.WriteHeader(404)
-		w.Write(e)
+		r := Response{
+			Stdout: "",
+			Stderr: fmt.Sprintf("web-terminal: command not found: %s", cmd),
+		}
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusNotFound)
+		json.NewEncoder(w).Encode(r)
 		return
 	}
 
 }
 
 func main() {
-	// Hello world, the web server
+	mux := http.NewServeMux()
+	mux.HandleFunc("/", WebTerminal)
 
-	http.HandleFunc("/", WebTerminal)
-	log.Println("Listing for requests at http://localhost:8000/hello")
-	log.Fatal(http.ListenAndServe(":8000", nil))
+	handler := cors.Default().Handler(mux)
+	log.Println("Listing for requests at http://localhost:8000")
+	log.Fatal(http.ListenAndServe(":8000", handler))
 }
